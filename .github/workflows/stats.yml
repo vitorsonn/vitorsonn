@@ -1,14 +1,12 @@
 name: Generate stats card
 
 on:
-  schedule: # execute every 12 hours
-    - cron: "* */12 * * *"
-
+  schedule:
+    - cron: "0 */12 * * *" # Ajustado: Roda a cada 12h (no cron anterior estava rodando A CADA MINUTO)
   workflow_dispatch:
-
   push:
     branches:
-    - main
+      - main
 
 jobs:
   generate:
@@ -22,10 +20,11 @@ jobs:
         uses: readme-tools/github-readme-stats-action@v1
         with:
           card: stats
-          options: username=${{ github.repository_owner }}&hide_title=false&hide_rank=false&show_icons=true&include_all_commits=true&count_private=true&disable_animations=false&theme=radical&locale=en&hide_border=true
+          # Adicionado a '?' no inicio das opções
+          options: ?username=${{ github.repository_owner }}&hide_title=false&hide_rank=false&show_icons=true&include_all_commits=true&count_private=true&disable_animations=false&theme=radical&locale=en&hide_border=true
           path: dist/stats.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
-
+          # Troca do GITHUB_TOKEN pelo teu PAT customizado
+          token: ${{ secrets.STATS_TOKEN }}
 
       - name: push stats.svg to the output branch
         uses: crazy-max/ghaction-github-pages@v3.1.0
